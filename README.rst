@@ -35,3 +35,12 @@ solution to. Right now, this is just a concept...
     connected to
   * show age of data
 
+Examples
+---------
+
+* `OpenNMS <http://www.opennms.org>`_ is AGPL 3 and has a nice interactive
+  `topology map <http://demo.opennms.com/opennms/topology>`_ (demo:demo). The frontend is
+  `based on <http://www.opennms.org/wiki/Topology_Maps>`_ D3.js and SVG, but it seems like
+  most of the calculation is done on the backend using a Vaadin OSGi app. The
+  `code <https://github.com/OpenNMS/opennms/tree/develop/features/topology-map>`_ for this
+  seems quite complex, and seems to do the graph-building server-side.
