@@ -30,9 +30,10 @@ for i in range(17):
 
 graph.write_dot('netgraph.dot')
 for p in ['dot', 'neato', 'sfdp', 'fdp', 'twopi', 'circo']:
-    fname = 'netgraph_{p}.png'.format(p=p)
-    print("writing {f}".format(f=fname))
-    graph.write_png(fname, prog=p)
+    for t in ['png', 'svg']:
+        fname = 'netgraph_{p}.{t}'.format(p=p, t=t)
+        print("writing {f}".format(f=fname))
+        graph.write(fname, prog=p, format=t)
 
 """
 clusters - see http://jseabold.net/blog/2012/02/12/making-graphical-models-with-pydot/
