@@ -17,7 +17,8 @@
 <script>
 
 var width = 960,
-    height = 1000
+    height = 1000;
+var removed new Object();
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -29,8 +30,6 @@ var force = d3.layout.force()
     .charge(-100)
     .size([width, height]);
 
-var removed_nodes = Array();
-
 d3.json("graph.json", function(error, json) {
   force
       .nodes(json.nodes)
@@ -39,7 +38,7 @@ d3.json("graph.json", function(error, json) {
 
   var link = svg.selectAll(".link")
       .data(json.links)
-    .enter().append("line")
+      .enter().append("line")
       .attr("class", "link");
 
   var node = svg.selectAll(".node")
@@ -79,8 +78,9 @@ function click(d) {
     alert(d._children);
   } else {
     alert("remove");
-    // do something
+    idx = d.index;
   }
+  // @TODO - need to do something to remove and re-add nodes on click
   update();
 } 
 </script>
