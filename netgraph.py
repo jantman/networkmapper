@@ -2,31 +2,52 @@
 
 # requires pydot >= 1.0.28; pip sees this as external and unverified
 import pydot
+import json
 
 graph = pydot.Dot(graph_name='network', graph_type='graph', size='80, 80', overlap="scale")
+
+json_nodes = []
+json_links = []
 
 nodes = {}
 nodes['core1'] = pydot.Node('core1', style='filled', fillcolor='red')
 graph.add_node(nodes['core1'])
+json_nodes.append({'name': 'core1'})
 nodes['core2'] = pydot.Node('core2', style='filled', fillcolor='red')
 graph.add_node(nodes['core2'])
+json_nodes.append({'name': 'core2'})
+
 
 def make_edge_label(s):
     return s
 
+graphdata = {}
 for i in range(17):
     switchname = 'switch{i}'.format(i=i)
     nodes[switchname] = pydot.Node(switchname, style='filled', fillcolor='yellow')
     graph.add_node(nodes[switchname])
+    json_nodes.append({'name': switchname})
+    idx = json_nodes.index({'name': switchname})
     graph.add_edge(pydot.Edge(nodes['core1'], nodes[switchname], label=make_edge_label('uplink'), color='green'))
+    json_links.append({'source': 0, 'target': idx})
     graph.add_edge(pydot.Edge(nodes['core2'], nodes[switchname], label=make_edge_label('uplink'), color='green'))
+    json_links.append({'source': 1, 'target': idx})
     for x in range(20):
         devname = 'switch{i}dev{x}'.format(i=i, x=x)
         nodes[devname] = pydot.Node(devname)
         graph.add_node(nodes[devname])
+        json_nodes.append({'name': devname})
+        idx2 = json_nodes.index({'name': devname})
         graph.add_edge(pydot.Edge(nodes[switchname], nodes[devname], label=make_edge_label('uplink'), color='blue'))
+        json_links.append({'source': idx, 'target': idx2})
         if x % 10 == 0:
             graph.add_edge(pydot.Edge(nodes[switchname], nodes[devname], label=make_edge_label('uplink'), color='blue'))
+            json_links.append({'source': idx, 'target': idx2})
+
+j = {'nodes': json_nodes, 'links': json_links}
+with open('graph.json', 'w') as fh:
+    fh.write(json.dumps(j))
+print("Graph written to: graph.json")
 
 graph.write_dot('netgraph.dot')
 for p in ['dot', 'neato', 'sfdp', 'fdp', 'twopi', 'circo']:
