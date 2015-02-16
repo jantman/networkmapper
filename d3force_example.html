@@ -17,7 +17,7 @@
 <script>
 
 var width = 960,
-    height = 500
+    height = 1000
 
 var svg = d3.select("body").append("svg")
     .attr("width", width)
@@ -28,6 +28,8 @@ var force = d3.layout.force()
     .distance(100)
     .charge(-100)
     .size([width, height]);
+
+var removed_nodes = Array();
 
 d3.json("graph.json", function(error, json) {
   force
@@ -42,9 +44,10 @@ d3.json("graph.json", function(error, json) {
 
   var node = svg.selectAll(".node")
       .data(json.nodes)
-    .enter().append("g")
+      .enter().append("g")
       .attr("class", "node")
-      .call(force.drag);
+      .call(force.drag)
+      .on("click", click);
 
   node.append("image")
       .attr("xlink:href", "https://github.com/favicon.ico")
@@ -68,4 +71,16 @@ d3.json("graph.json", function(error, json) {
   });
 });
 
+function click(d) {
+  if (d3.event.defaultPrevented) return; // ignore drag
+  console.log(d);
+  if (d._children) {
+    alert("how to add back?");
+    alert(d._children);
+  } else {
+    alert("remove");
+    // do something
+  }
+  update();
+} 
 </script>
